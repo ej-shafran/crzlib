@@ -1,0 +1,5 @@
+-I./lib 
+-Wall
+-Wextra
+-Werror
+-pedantic
