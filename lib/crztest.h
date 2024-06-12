@@ -1,17 +1,14 @@
 #ifndef CRZTEST_H_
 #define CRZTEST_H_
 
-#ifndef CRZ_DEBUG
-#include <stdio.h>
-#define CRZ_DEBUG printf
-#endif // CRZ_DEBUG
+#include "crzdef.h"
 
 /// INTERNAL: you most likely don't want to use this.
 ///           Try `BEFORE_EACH(cb)` instead.
-static void (*crztest_before_each_cb)(void) = NULL;
+static void (*crztest_before_each_cb)(void) = CRZ_NULL;
 /// INTERNAL: you most likely don't want to use this.
 ///           Try `AFTER_EACH(cb)` instead.
-static void (*crztest_after_each_cb)(void) = NULL;
+static void (*crztest_after_each_cb)(void) = CRZ_NULL;
 /// INTERNAL: you most likely don't want to use this.
 ///           Try `TEST_PAD()` or `TEST_LOG(...)` instead.
 static int crztest_padding = 0;
