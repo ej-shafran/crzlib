@@ -66,6 +66,8 @@ FixNamespaceComments: false
 
 ForEachMacros:
   - 'ARRAY_FOR'
+  - 'CRZ_STRING_FOR'
+  - 'HASH_TABLE_FOR'
 
 IncludeBlocks: Preserve
 IncludeCategories:
