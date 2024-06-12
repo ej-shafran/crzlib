@@ -5,12 +5,12 @@
 
 static void (*crz__before_each_cb)(void) = NULL;
 static void (*crz__after_each_cb)(void) = NULL;
+static int padding = 0;
+static int failures = 0;
 
 #define TEST_MAIN(block)                                                     \
 	int main(void)                                                       \
 	{                                                                    \
-		int padding = 0;                                             \
-		int failures = 0;                                            \
 		do {                                                         \
 			block;                                               \
 		} while (0);                                                 \
