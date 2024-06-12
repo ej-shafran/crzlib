@@ -63,7 +63,7 @@ TEST_MAIN({
 			EXPECT(ht.size == original * 2);
 		});
 
-		TEST("Overrides existing value", {
+		TEST("Overriding existing value", {
 			// Arrange
 			HASH_TABLE_INIT(&ht, 2);
 			HASH_TABLE_INSERT(&ht, "a", 1);
