@@ -123,6 +123,12 @@ typedef ARRAY(void) AnyArray;
 	} while (0)
 
 void crz__array_grow_to(AnyArray *selfp, CRZ_SIZE new_cap,
+			CRZ_SIZE element_size);
+
+void crz__array_splice(AnyArray *selfp, CRZ_SIZE index, CRZ_SIZE remove_amount,
+		       void *contentsp, CRZ_SIZE count, CRZ_SIZE element_size);
+
+void crz__array_grow_to(AnyArray *selfp, CRZ_SIZE new_cap,
 			CRZ_SIZE element_size)
 {
 	if (selfp->cap < new_cap) {
