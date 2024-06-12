@@ -12,3 +12,9 @@ build/%: test/%.c $(lib_files)
 .PHONY: clean
 clean:
 	rm -rf build/
+
+.PHONY: ci
+ci: build
+	for test in ./build/* ; do \
+		valgrind $$test ; \
+	done

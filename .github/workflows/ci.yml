@@ -23,11 +23,5 @@ jobs:
       - name: "Setup Valgrind"
         run: "sudo apt update && sudo apt install -y valgrind"
 
-      - name: "Build"
-        run: "make"
-
-      - name: "Test"
-        run: |
-          for test in ./build/*; do
-            valgrind $test
-          done
+      - name: "Build & Test"
+        run: "make ci"
