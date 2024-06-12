@@ -1,100 +1,134 @@
 #ifndef CRZTEST_H_
 #define CRZTEST_H_
 
+#ifndef CRZ_DEBUG
 #include <stdio.h>
+#define CRZ_DEBUG printf
+#endif // CRZ_DEBUG
 
-static void (*crz__before_each_cb)(void) = NULL;
-static void (*crz__after_each_cb)(void) = NULL;
-static int padding = 0;
-static int failures = 0;
+/// INTERNAL: you most likely don't want to use this.
+///           Try `BEFORE_EACH(cb)` instead.
+static void (*crztest_before_each_cb)(void) = NULL;
+/// INTERNAL: you most likely don't want to use this.
+///           Try `AFTER_EACH(cb)` instead.
+static void (*crztest_after_each_cb)(void) = NULL;
+/// INTERNAL: you most likely don't want to use this.
+///           Try `TEST_PAD()` or `TEST_LOG(...)` instead.
+static int crztest_padding = 0;
+/// INTERNAL: you most likely don't want to use this.
+///           Try `TEST_FAIL(...)` instead.
+static int crztest_failures = 0;
 
-#define TEST_MAIN(block)                                                     \
-	int main(void)                                                       \
-	{                                                                    \
-		do {                                                         \
-			block;                                               \
-		} while (0);                                                 \
-		printf("\n");                                                \
-		if (failures <= 0) {                                         \
-			printf("All tests passed.\n");                       \
-		} else {                                                     \
-			printf("Failed with %d test failures.\n", failures); \
-		}                                                            \
-		return failures > 0 ? 1 : 0;                                 \
+/// Define the `main` function for the test file.
+#define TEST_MAIN(block)                                             \
+	int main(void)                                               \
+	{                                                            \
+		do {                                                 \
+			block;                                       \
+		} while (0);                                         \
+		CRZ_DEBUG("\n");                                     \
+		if (crztest_failures <= 0) {                         \
+			CRZ_DEBUG("All tests passed.\n");            \
+		} else {                                             \
+			CRZ_DEBUG("Failed with %d test failures.\n", \
+				  crztest_failures);                 \
+		}                                                    \
+		return crztest_failures > 0 ? 1 : 0;                 \
 	}
 
-#define CRZ_PRINT_PADDING()                         \
-	do {                                        \
-		for (int i = 0; i < padding; i++) { \
-			printf(" ");                \
-		}                                   \
+/// INTERNAL: you most likely don't want to use this.
+///           Try `TEST_PAD()` or `TEST_LOG(...)` instead.
+#define CRZTEST_PRINT_PADDING()                             \
+	do {                                                \
+		for (int i = 0; i < crztest_padding; i++) { \
+			CRZ_DEBUG(" ");                     \
+		}                                           \
 	} while (0)
 
-#define CRZ_TEST_INDENT() padding += 2;
-
-#define CRZ_TEST_DEDENT() padding -= 2;
-
-#define TEST_PAD()                   \
-	do {                         \
-		CRZ_TEST_INDENT();   \
-		CRZ_PRINT_PADDING(); \
-		CRZ_TEST_DEDENT();   \
+/// INTERNAL: you most likely don't want to use this.
+///           Try `TEST_PAD()` or `TEST_LOG(...)` instead.
+#define CRZTEST_INDENT()              \
+	do {                          \
+		crztest_padding += 2; \
 	} while (0)
 
-#define DESCRIBE(header, block)                   \
-	do {                                      \
-		CRZ_PRINT_PADDING();              \
-		printf("DESCRIBE: %s\n", header); \
-                                                  \
-		CRZ_TEST_INDENT();                \
-		do {                              \
-			block;                    \
-		} while (0);                      \
-		CRZ_TEST_DEDENT();                \
+/// INTERNAL: you most likely don't want to use this.
+///           Try `TEST_PAD()` or `TEST_LOG(...)` instead.
+#define CRZTEST_DEDENT()              \
+	do {                          \
+		crztest_padding -= 2; \
 	} while (0)
 
-#define BEFORE_EACH(cb)                   \
-	do {                              \
-		crz__before_each_cb = cb; \
-	} while (0)
-
-#define AFTER_EACH(cb)                   \
+/// Temporarily indent a single log.
+#define TEST_PAD()                       \
 	do {                             \
-		crz__after_each_cb = cb; \
+		CRZTEST_INDENT();        \
+		CRZTEST_PRINT_PADDING(); \
+		CRZTEST_DEDENT();        \
 	} while (0)
 
-#define TEST(header, block)                         \
-	do {                                        \
-		if (crz__before_each_cb)            \
-			crz__before_each_cb();      \
-		int pretest_failures = failures;    \
-		CRZ_PRINT_PADDING();                \
-		printf("TEST: %s\n", header);       \
-		do {                                \
-			block;                      \
-		} while (0);                        \
-		if (failures == pretest_failures) { \
-			TEST_LOG("PASS\n");         \
-		}                                   \
-		if (crz__after_each_cb)             \
-			crz__after_each_cb();       \
+/// Define a test suite.
+#define DESCRIBE(header, block)                      \
+	do {                                         \
+		CRZTEST_PRINT_PADDING();             \
+		CRZ_DEBUG("DESCRIBE: %s\n", header); \
+                                                     \
+		CRZTEST_INDENT();                    \
+		do {                                 \
+			block;                       \
+		} while (0);                         \
+		CRZTEST_DEDENT();                    \
 	} while (0)
 
-#define TEST_LOG(...)                \
-	do {                         \
-		TEST_PAD();          \
-		printf(__VA_ARGS__); \
+/// Define a callback to run before each `TEST`.
+#define BEFORE_EACH(cb)                      \
+	do {                                 \
+		crztest_before_each_cb = cb; \
 	} while (0)
 
+/// Define a callback to run after each `TEST`.
+#define AFTER_EACH(cb)                      \
+	do {                                \
+		crztest_after_each_cb = cb; \
+	} while (0)
+
+/// Define a test case.
+#define TEST(header, block)                                 \
+	do {                                                \
+		if (crztest_before_each_cb)                 \
+			crztest_before_each_cb();           \
+		int pretest_failures = crztest_failures;    \
+		CRZTEST_PRINT_PADDING();                    \
+		CRZ_DEBUG("TEST: %s\n", header);            \
+		do {                                        \
+			block;                              \
+		} while (0);                                \
+		if (crztest_failures == pretest_failures) { \
+			TEST_LOG("PASS\n");                 \
+		}                                           \
+		if (crztest_after_each_cb)                  \
+			crztest_after_each_cb();            \
+	} while (0)
+
+/// Log to stdout, using the current level of padding.
+#define TEST_LOG(...)                   \
+	do {                            \
+		TEST_PAD();             \
+		CRZ_DEBUG(__VA_ARGS__); \
+	} while (0)
+
+/// Cause the current test case to fail, with the given message (printf-like).
 #define TEST_FAIL(...)                                         \
 	do {                                                   \
 		TEST_LOG("FAIL: %s:%d: ", __FILE__, __LINE__); \
-		printf(__VA_ARGS__);                           \
-		failures += 1;                                 \
+		CRZ_DEBUG(__VA_ARGS__);                        \
+		crztest_failures += 1;                         \
 	} while (0)
 
+/// Define a placeholder test that will always fail.
 #define TEST_TODO(header) TEST(header, TEST_FAIL("TODO\n"))
 
+/// If `condition` is false, fail the current test case with the given message (printf-like).
 #define EXPECTF(condition, ...)                 \
 	do {                                    \
 		if (!(condition)) {             \
@@ -102,6 +136,7 @@ static int failures = 0;
 		}                               \
 	} while (0)
 
+/// If `condition` is false, fail the current test case with a default message.
 #define EXPECT(condition) EXPECTF(condition, "Expectation failed\n")
 
 #endif // CRZTEST_H_
