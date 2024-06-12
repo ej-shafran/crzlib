@@ -32,8 +32,8 @@ TEST_MAIN({
 
 		TEST("Properly inserting with collision", {
 			// Invariant
-			EXPECT(crz__djb2_hash("ab") % 2 ==
-			       crz__djb2_hash("ba") % 2);
+			EXPECT(crzhash_djb2("ab") % 2 ==
+			       crzhash_djb2("ba") % 2);
 
 			// Arrange
 			HASH_TABLE_INIT(&ht, 2);
@@ -61,6 +61,19 @@ TEST_MAIN({
 			HASH_PAIR(size_t) *result = HASH_TABLE_GET(ht, "a");
 			EXPECT(result != CRZ_NULL && result->value == 1);
 			EXPECT(ht.size == original * 2);
+		});
+
+		TEST("Overrides existing value", {
+			// Arrange
+			HASH_TABLE_INIT(&ht, 2);
+			HASH_TABLE_INSERT(&ht, "a", 1);
+
+			// Act
+			HASH_TABLE_INSERT(&ht, "a", 2);
+
+			// Assert
+			HASH_PAIR(size_t) *result = HASH_TABLE_GET(ht, "a");
+			EXPECT(result != CRZ_NULL && result->value == 2);
 		});
 	});
 
