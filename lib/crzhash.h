@@ -224,9 +224,8 @@ void crzhash_init(Crzhash_AnyHashTable *selfp, CRZ_SIZE initial_size,
 	(selfp)->size = initial_size;
 	(selfp)->ptr = CRZ_MALLOC(pair_size * initial_size);
 	CRZ_ASSERT((selfp)->ptr && "Out of memory when allocating hash table");
-	for (CRZ_SIZE i = 0; i < initial_size; i++) {
-		(selfp)->ptr[i] = NULL;
-	}
+	for (CRZ_SIZE i = 0; i < initial_size; i++)
+		(selfp)->ptr[i] = CRZ_NULL;
 }
 
 CRZ_SIZE crzhash_djb2(CRZ_STRING str)
