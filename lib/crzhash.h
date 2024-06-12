@@ -6,7 +6,7 @@
 #endif // CRZ_STRING
 
 #ifndef CRZ_STRING_GET
-#define CRZ_STRING_GET(str, index) str[index]
+#define CRZ_STRING_GET(str, index) (str)[index]
 #endif // CRZ_STRING_GET
 
 #ifndef CRZ_STRING_IS_END
