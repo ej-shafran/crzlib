@@ -128,19 +128,22 @@ typedef struct {
 ///
 /// If the hash table overflows, a new hash table is created at twice the size, and all of the elements are re-inserted into it.
 /// The `selfp` pointer is replaced to point at this new table.
-#define HASH_TABLE_INSERT(selfp, insert_key, insert_value)                 \
-	do {                                                               \
-		CRZ_SIZE index = crzhash_insert_index(                     \
-			(Crzhash_AnyHashTable *)(selfp), (insert_key),     \
-			HASH_TABLE_PAIR_SIZE(*(selfp)));                   \
-		if ((selfp)->ptr[index]) {                                 \
-			(selfp)->ptr[index]->value = insert_value;         \
-		} else {                                                   \
-			(selfp)->ptr[index] =                              \
-				CRZ_MALLOC(sizeof(Crzhash_AnyHashPair));   \
-			(selfp)->ptr[index]->key = CRZ_STRDUP(insert_key); \
-			(selfp)->ptr[index]->value = insert_value;         \
-		}                                                          \
+#define HASH_TABLE_INSERT(selfp, insert_key, insert_value)                                      \
+	do {                                                                                    \
+		CRZ_SIZE index = crzhash_insert_index(                                          \
+			(Crzhash_AnyHashTable *)(selfp), (insert_key),                          \
+			HASH_TABLE_PAIR_SIZE(*(selfp)));                                        \
+		if ((selfp)->ptr[index]) {                                                      \
+			(selfp)->ptr[index]->value = insert_value;                              \
+		} else {                                                                        \
+			(selfp)->ptr[index] =                                                   \
+				CRZ_MALLOC(HASH_TABLE_PAIR_SIZE(*(selfp)));                     \
+			CRZ_ASSERT(                                                             \
+				(selfp)->ptr[index] &&                                          \
+				"Out of memory when allocating key-value pair for hash table"); \
+			(selfp)->ptr[index]->key = CRZ_STRDUP(insert_key);                      \
+			(selfp)->ptr[index]->value = insert_value;                              \
+		}                                                                               \
 	} while (0)
 
 /// Get a pointer to the pair with key `get_key` in the hash table `self`.
