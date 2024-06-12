@@ -161,17 +161,17 @@ typedef struct {
 	for (CRZ_SIZE index = 0; index < (self).size; index++)
 
 /// Print out the key-value pairs of the hash table `self`. `fmt` is the format specifier for the value type, as for `printf`.
-#define HASH_TABLE_DEBUG(self, fmt)                             \
-	do {                                                    \
-		CRZ_DEBUG("{");                                 \
-		HASH_TABLE_FOR(self, i) {                       \
-			if ((self).ptr[i]) {                    \
-				CRZ_DEBUG(" \"%s\" = " fmt ";", \
-					  self.ptr[i]->key,     \
-					  self.ptr[i]->value);  \
-			}                                       \
-		}                                               \
-		CRZ_DEBUG(" }\n");                              \
+#define HASH_TABLE_DEBUG(self, fmt)                              \
+	do {                                                     \
+		CRZ_DEBUG("{");                                  \
+		HASH_TABLE_FOR(self, i) {                        \
+			if ((self).ptr[i]) {                     \
+				CRZ_DEBUG(" \"%s\" = " fmt ";",  \
+					  (self).ptr[i]->key,    \
+					  (self).ptr[i]->value); \
+			}                                        \
+		}                                                \
+		CRZ_DEBUG(" }\n");                               \
 	} while (0)
 
 /// Free the space allocated for:
