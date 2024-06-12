@@ -1,0 +1,3 @@
+--error-exitcode=1
+--leak-check=full
+--show-error-list=yes
