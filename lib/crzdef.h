@@ -67,6 +67,11 @@
 #define CRZ_STRDUP strdup
 #endif // CRZ_STRDUP
 
+#ifndef CRZ_STRLEN
+#include <string.h>
+#define CRZ_STRLEN strlen
+#endif // CRZ_STRLEN
+
 #ifndef CRZ_MALLOC
 #include <stdlib.h>
 #define CRZ_MALLOC malloc
@@ -86,5 +91,15 @@
 #include <stdbool.h>
 #define CRZ_FALSE false
 #endif // CRZ_FALSE
+
+#ifndef CRZ_MEMCMP
+#include <string.h>
+#define CRZ_MEMCMP memcmp
+#endif // CRZ_MEMCMP
+
+#ifndef CRZ_SPRINTF
+#include <stdio.h>
+#define CRZ_SPRINTF sprintf
+#endif // CRZ_SPRINTF
 
 #endif // CRZDEF_H_
