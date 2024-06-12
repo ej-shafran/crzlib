@@ -123,26 +123,56 @@ TEST_MAIN({
 			EXPECT(a.len == 0);
 		});
 
-		TEST("Splicing as adding", {
-			// Arrange + act
-			ARRAY_SPLICE(&a, 0, 0, contentsp, SIZEOF_CONTENTSP);
+		DESCRIBE("Splicing as inserting", {
+			TEST("Using ARRAY_SPLICE", {
+				// Arrange + act
+				ARRAY_SPLICE(&a, 0, 0, contentsp,
+					     SIZEOF_CONTENTSP);
 
-			// Assert
-			EXPECT(a.len == SIZEOF_CONTENTSP);
-			ARRAY_FOR(a, i) {
-				EXPECT(ARRAY_GET(a, i) == contentsp[i]);
-			}
+				// Assert
+				EXPECT(a.len == SIZEOF_CONTENTSP);
+				ARRAY_FOR(a, i) {
+					EXPECT(ARRAY_GET(a, i) == contentsp[i]);
+				}
+			});
+
+			TEST("Using ARRAY_INSERT", {
+				// Arrange + act
+				ARRAY_INSERT(&a, 0, contentsp,
+					     SIZEOF_CONTENTSP);
+
+				// Assert
+				EXPECT(a.len == SIZEOF_CONTENTSP);
+				ARRAY_FOR(a, i) {
+					EXPECT(ARRAY_GET(a, i) == contentsp[i]);
+				}
+			});
 		});
 
-		TEST("Splicing as removing", {
-			// Arrange
-			ARRAY_PUSH_MANY(&a, contentsp, SIZEOF_CONTENTSP);
+		DESCRIBE("Splicing as removing", {
+			TEST("Using ARRAY_SPLICE", {
+				// Arrange
+				ARRAY_PUSH_MANY(&a, contentsp,
+						SIZEOF_CONTENTSP);
 
-			// Act
-			ARRAY_SPLICE(&a, 0, SIZEOF_CONTENTSP, NULL, 0);
+				// Act
+				ARRAY_SPLICE(&a, 0, SIZEOF_CONTENTSP, NULL, 0);
 
-			// Assert
-			EXPECT(a.len == 0);
+				// Assert
+				EXPECT(a.len == 0);
+			});
+
+			TEST("Using ARRAY_REMOVE", {
+				// Arrange
+				ARRAY_PUSH_MANY(&a, contentsp,
+						SIZEOF_CONTENTSP);
+
+				// Act
+				ARRAY_REMOVE(&a, 0, SIZEOF_CONTENTSP);
+
+				// Assert
+				EXPECT(a.len == 0);
+			});
 		});
 
 		TEST("Splicing as adding and removing", {

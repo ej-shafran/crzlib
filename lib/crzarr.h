@@ -98,6 +98,9 @@ typedef ARRAY(void) AnyArray;
 #define ARRAY_REMOVE(selfp, index, amount) \
 	ARRAY_SPLICE(selfp, index, amount, NULL, 0)
 
+#define ARRAY_INSERT(selfp, index, contentsp, count) \
+	ARRAY_SPLICE(selfp, index, 0, contentsp, count)
+
 #define ARRAY_FREE(selfp)               \
 	do {                            \
 		CRZ_FREE((selfp)->ptr); \
