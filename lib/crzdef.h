@@ -102,4 +102,9 @@
 #define CRZ_SPRINTF sprintf
 #endif // CRZ_SPRINTF
 
+#ifndef CRZ_ISSPACE
+#include <ctype.h>
+#define CRZ_ISSPACE isspace
+#endif // CRZ_ISSPACE
+
 #endif // CRZDEF_H_
